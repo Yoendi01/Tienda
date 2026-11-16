@@ -1,0 +1,41 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<a href="{% url 'shop:home' %}" class="back-link">← Volver</a>
+
+<div class="product-detail">
+    <div class="product-detail-image">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+    <div class="product-detail-info">
+        <span class="product-category">{{ product.category.name }}</span>
+        <h1>{{ product.name }}</h1>
+        <p class="product-detail-price">${{ product.price }}</p>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="stock">Stock: {{ product.stock }} unidades</p>
+        <form action="{% url 'shop:cart_add' product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary">🛒 Añadir al carrito</button>
+        </form>
+    </div>
+</div>
+
+{% if related %}
+<section class="related">
+    <h2>También te puede gustar</h2>
+    <div class="product-grid">
+        {% for p in related %}
+        <div class="product-card">
+            <a href="{{ p.get_absolute_url }}" class="product-image-wrap">
+                <img src="{{ p.image.url }}" alt="{{ p.name }}" class="product-image">
+            </a>
+            <div class="product-info">
+                <h3 class="product-name"><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></h3>
+                <span class="product-price">${{ p.price }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

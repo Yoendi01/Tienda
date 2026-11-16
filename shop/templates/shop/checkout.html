@@ -1,0 +1,92 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<a href="{% url 'shop:cart_detail' %}" class="back-link">← Volver al carrito</a>
+
+<h1 class="page-title">📤 Enviar pedido</h1>
+
+<div class="checkout-layout">
+
+    <!-- Columna izquierda: opciones de envío -->
+    <div class="checkout-options">
+        <h2>Elige cómo enviarnos tu pedido</h2>
+        <p class="checkout-sub">
+            No necesitas crear cuenta. Elige WhatsApp o correo y te contactaremos
+            para coordinar el pago y la entrega.
+        </p>
+
+        <a href="{{ whatsapp_url }}" target="_blank" rel="noopener"
+           class="send-option whatsapp">
+            <div class="send-icon">💬</div>
+            <div class="send-info">
+                <h3>Enviar por WhatsApp</h3>
+                <p>Rápido y directo. Abre el chat con el detalle del pedido.</p>
+            </div>
+            <span class="send-arrow">→</span>
+        </a>
+
+        <a href="{{ mailto_url }}" class="send-option email">
+            <div class="send-icon">✉️</div>
+            <div class="send-info">
+                <h3>Enviar por correo</h3>
+                <p>Se abrirá tu cliente de correo con el pedido ya redactado.</p>
+            </div>
+            <span class="send-arrow">→</span>
+        </a>
+
+        <div class="checkout-tip">
+            💡 <strong>Consejo:</strong> si el botón de correo no abre nada,
+            asegúrate de tener configurada una app de correo en tu dispositivo.
+            También puedes copiar el mensaje de la derecha.
+        </div>
+    </div>
+
+    <!-- Columna derecha: vista previa del mensaje -->
+    <aside class="checkout-preview">
+        <h2>Vista previa del mensaje</h2>
+        <pre class="message-preview">{{ message }}</pre>
+
+        <button type="button" class="btn-copy" onclick="copyMessage()">
+            📋 Copiar mensaje
+        </button>
+        <span id="copy-feedback" class="copy-feedback"></span>
+
+        <div class="checkout-summary">
+            <div class="summary-row total">
+                <span>Total del pedido</span>
+                <span>${{ total }}</span>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<script>
+function copyMessage() {
+    const text = document.querySelector('.message-preview').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const fb = document.getElementById('copy-feedback');
+        fb.textContent = '¡Copiado!';
+        fb.classList.add('show');
+        setTimeout(() => {
+            fb.textContent = '';
+            fb.classList.remove('show');
+        }, 2000);
+    }).catch(() => {
+        // Fallback para navegadores viejos
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const fb = document.getElementById('copy-feedback');
+        fb.textContent = '¡Copiado!';
+        fb.classList.add('show');
+        setTimeout(() => {
+            fb.textContent = '';
+            fb.classList.remove('show');
+        }, 2000);
+    });
+}
+</script>
+{% endblock %}

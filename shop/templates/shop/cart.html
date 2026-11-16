@@ -1,0 +1,54 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h1 class="page-title">🛒 Tu Carrito</h1>
+
+{% if items %}
+<div class="cart-layout">
+    <div class="cart-items">
+        {% for item in items %}
+        <div class="cart-item">
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+            <div class="cart-item-info">
+                <h3>{{ item.product.name }}</h3>
+                <p class="cart-price">${{ item.product.price }}</p>
+            </div>
+            <form action="{% url 'shop:cart_update' item.product.id %}" method="post" class="qty-form">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input"
+                    onchange="this.form.submit()">
+            </form>
+            <p class="cart-subtotal">${{ item.subtotal }}</p>
+            <form action="{% url 'shop:cart_remove' item.product.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-remove">✕</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    <aside class="cart-summary">
+        <h2>Resumen</h2>
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${{ total }}</span>
+        </div>
+        <div class="summary-row total">
+            <span>Total</span>
+            <span>${{ total }}</span>
+        </div>
+        <a href="{% url 'shop:checkout' %}" class="btn-primary btn-block" style="display:block; text-decoration:none;">
+            ✅ Finalizar pedido
+        </a>
+
+        <a href="{% url 'shop:home' %}" class="continue-link">Seguir comprando</a>
+    </aside>
+</div>
+{% else %}
+<div class="empty-cart">
+    <div class="empty-cart-icon">🛒</div>
+    <h2>Tu carrito está vacío</h2>
+    <p>Explora nuestros productos y encuentra algo especial.</p>
+    <a href="{% url 'shop:home' %}" class="btn-primary">Ir a la tienda</a>
+</div>
+{% endif %}
+{% endblock %}

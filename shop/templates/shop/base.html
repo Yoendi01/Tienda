@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tienda Online{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-inner">
+            <a href="{% url 'shop:home' %}" class="logo">
+                <span class="logo-icon">🛍️</span>
+                <span class="logo-text">AuroraShop</span>
+            </a>
+            <nav class="nav">
+                <a href="{% url 'shop:home' %}">Inicio</a>
+                <a href="{% url 'shop:cart_detail' %}" class="cart-link">
+                    🛒 Carrito
+                    {% if cart_count > 0 %}
+                        <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 AuroraShop · Hecho con Amor ✨</p>
+        </div>
+    </footer>
+</body>
+</html>

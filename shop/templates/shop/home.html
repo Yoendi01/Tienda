@@ -1,0 +1,47 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Descubre lo <span class="gradient-text">extraordinario</span></h1>
+        <p>Productos seleccionados con amor para ti</p>
+    </div>
+</section>
+
+<div class="filters">
+    <a href="{% url 'shop:home' %}" class="filter-pill {% if not selected_category %}active{% endif %}">
+        Todos
+    </a>
+    {% for cat in categories %}
+        <a href="?categoria={{ cat.slug }}"
+           class="filter-pill {% if selected_category == cat.slug %}active{% endif %}">
+            {{ cat.name }}
+        </a>
+    {% endfor %}
+</div>
+
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <a href="{{ product.get_absolute_url }}" class="product-image-wrap">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        </a>
+        <div class="product-info">
+            <span class="product-category">{{ product.category.name }}</span>
+            <h3 class="product-name">
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            </h3>
+            <div class="product-bottom">
+                <span class="product-price">${{ product.price }}</span>
+                <form action="{% url 'shop:cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-add">+ Añadir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="empty-msg">No hay productos disponibles.</p>
+    {% endfor %}
+</div>
+{% endblock %}
