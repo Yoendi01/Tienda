@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 from django.conf import settings
 from django.utils.http import urlencode
 from urllib.parse import quote
@@ -152,3 +153,7 @@ def checkout(request):
         'whatsapp_url': whatsapp_url,
         'mailto_url': mailto_url,
     })
+
+def health(request):
+
+    return HttpResponse("OK")
